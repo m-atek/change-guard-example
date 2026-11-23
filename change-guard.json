@@ -1,0 +1,22 @@
+{
+  "_comment": "Demo project, no real data. Example configuration for the seeded cases.",
+  "protected": [
+    "src/**"
+  ],
+  "exempt": [
+    "docs/**",
+    "*.md",
+    "requirements*.txt"
+  ],
+  "tests": [
+    "tests/**/test_*.py"
+  ],
+  "test_support": [
+    "tests/**/helpers.py"
+  ],
+  "test_command": "{python} {cg_tools}/cg_unittest_report.py {report} {files}",
+  "report_format": "unittest-json",
+  "time_budget_seconds": 300,
+  "mode": "report",
+  "log_file": ".change-guard/runs.log"
+}

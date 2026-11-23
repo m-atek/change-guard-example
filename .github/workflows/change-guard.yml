@@ -1,0 +1,45 @@
+name: change-guard
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled, edited]
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+
+concurrency:
+  group: change-guard-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  change-guard:
+    name: change-guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out with full history
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      # Put the steps your tests need here, exactly as in your normal test job
+      # (for example actions/setup-python and installing dependencies).
+      # A step that installs the pull request's dependencies runs the pull
+      # request's code with the whole job environment; prefer setup_command.
+
+      - name: Change guard
+        uses: m-atek/change-guard@577526c24a75875ca316216e835600e302523c91 # v0.3.3
+        with:
+          mode: ${{ vars.CHANGE_GUARD_MODE || 'report' }}
+
+      - name: Keep the log line
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: change-guard-log-pr-${{ github.event.pull_request.number }}-run-${{ github.run_attempt }}-${{ github.run_id }}
+          path: .change-guard/runs.log
+          if-no-files-found: warn
+          retention-days: 90
