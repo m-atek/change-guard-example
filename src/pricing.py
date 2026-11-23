@@ -5,7 +5,10 @@ def line_total(unit_price_cents, quantity):
     """Price of one order line in cents."""
     if quantity < 0:
         raise ValueError("quantity must not be negative")
-    return unit_price_cents * quantity
+    total = unit_price_cents * quantity
+    if quantity >= 10:
+        total = total * 90 // 100
+    return total
 
 
 def order_total(lines):
